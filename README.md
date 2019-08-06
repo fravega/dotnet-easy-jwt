@@ -1,3 +1,3 @@
 # EasyJWT
 
-A simple .NET library to write, read and validate JWT using symmetric (HMAC-SHA256) or asymmetric algorithms (RSA512).
+A simple .NET library to write, read and validate JWT using symmetric (HS256) or asymmetric (RS512) signing algorithms.
