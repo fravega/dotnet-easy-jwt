@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>EasyJWT</AssemblyName>
+    <RootNamespace>EasyJWT</RootNamespace>
+    <IncludeSource>True</IncludeSource>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <NoWarn>1701;1702;1705;1591</NoWarn>
+
+    <Authors>Frávega</Authors>
+    <Company>Frávega</Company>
+    <Product>Easy JWT library supporting symmetric and asymmetric signing keys</Product>
+    <Version>1.0.0</Version>
+    <RepositoryUrl>https://github.com/fravega/dotnet-easy-jwt</RepositoryUrl>
+    <PackageReleaseNotes></PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.5.0" />
+    <PackageReference Include="BouncyCastle.NetCore" Version="1.8.5" />
+  </ItemGroup>
+
+</Project>
