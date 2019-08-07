@@ -19,15 +19,16 @@ namespace EasyJWT.Tests
             var claims = new Dictionary<string, object>
             {
                 { "some-claim-int", 123456 },
-                { "some-claim-bool", false }
+                { "some-claim-bool", false },
+                { "some-claim-array", new string[] { "item1", "item2" }}
             };
 
             // WHEN writing the JWT
-            var jwt = sut.WriteSymmetric(issuer, audience, DateTime.UtcNow.AddHours(2), sharedKey, claims);
+            var jwt = sut.WriteSymmetric(issuer, audience, DateTime.MaxValue, sharedKey, claims);
 
             // THEN the JWT is the expected one
-            var expected = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzb21lLWNsYWltLWludCI6MTIzNDU2LCJzb21lLWNsYWltLWJvb2wiOmZhbHNlLCJleHAiOjE1NjUxMjg1MjQsImlzcyI6InNvbWUtaXNzdWVyIiwiYXVkIjoic29tZS1hdWRpZW5jZSJ9.Omb3fesVj4s8sk7_uwHuOgQVOHiacUE_byiOAFzzfYM";
-            jwt.Should().Equals(expected);
+            var expected = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzb21lLWNsYWltLWludCI6MTIzNDU2LCJzb21lLWNsYWltLWJvb2wiOmZhbHNlLCJzb21lLWNsYWltLWFycmF5IjpbIml0ZW0xIiwiaXRlbTIiXSwiZXhwIjoyNTM0MDIzMDA4MDAsImlzcyI6InNvbWUtaXNzdWVyIiwiYXVkIjoic29tZS1hdWRpZW5jZSJ9.jGjRCItE2n42ZUu7h4GzH-oT8n1Y5wjzs73NYQUcmJk";
+            jwt.Should().Be(expected);
         }
         
         [Fact]
@@ -40,7 +41,7 @@ namespace EasyJWT.Tests
             var sharedKey = "";
 
             // WHEN writing the JWT
-            Action act = () => sut.WriteSymmetric(issuer, audience, DateTime.UtcNow.AddHours(2), sharedKey, null);
+            Action act = () => sut.WriteSymmetric(issuer, audience, DateTime.MaxValue, sharedKey, null);
 
             // THEN it should throw ArgumentNullException
             act.Should().Throw<ArgumentNullException>()
@@ -57,7 +58,7 @@ namespace EasyJWT.Tests
             var sharedKey = "1234";
 
             // WHEN writing the JWT
-            Action act = () => sut.WriteSymmetric(issuer, audience, DateTime.UtcNow.AddHours(2), sharedKey, null);
+            Action act = () => sut.WriteSymmetric(issuer, audience, DateTime.MaxValue, sharedKey, null);
 
             // THEN it should throw ArgumentOutOfRangeException
             act.Should().Throw<ArgumentOutOfRangeException>();
@@ -73,7 +74,7 @@ namespace EasyJWT.Tests
             var sharedKey = "b7vUtYUvmR46ifoddrccuWCHeRMfm2qw";
 
             // WHEN writing the JWT
-            Action act = () => sut.WriteSymmetric(issuer, audience, DateTime.UtcNow.AddHours(2), sharedKey, null);
+            Action act = () => sut.WriteSymmetric(issuer, audience, DateTime.MaxValue, sharedKey, null);
 
             // THEN it should throw ArgumentNullException
             act.Should().Throw<ArgumentNullException>()
@@ -90,7 +91,7 @@ namespace EasyJWT.Tests
             var sharedKey = "b7vUtYUvmR46ifoddrccuWCHeRMfm2qw";
 
             // WHEN writing the JWT
-            Action act = () => sut.WriteSymmetric(issuer, audience, DateTime.UtcNow.AddHours(2), sharedKey, null);
+            Action act = () => sut.WriteSymmetric(issuer, audience, DateTime.MaxValue, sharedKey, null);
 
             // THEN it should throw ArgumentNullException
             act.Should().Throw<ArgumentNullException>()
@@ -112,10 +113,10 @@ namespace EasyJWT.Tests
             };
 
             // WHEN writing the JWT
-            var jwt = sut.WriteAsymmetric(issuer, audience, DateTime.UtcNow.AddHours(2), privateRSAKey, claims);
+            var jwt = sut.WriteAsymmetric(issuer, audience, DateTime.MaxValue, privateRSAKey, claims);
 
             // THEN the JWT is the expected one
-            var expected = "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJzb21lLWNsYWltLWludCI6MTIzNDU2LCJzb21lLWNsYWltLWJvb2wiOmZhbHNlLCJleHAiOjE1NjUxMzAwODMsImlzcyI6InNvbWUtaXNzdWVyIiwiYXVkIjoic29tZS1hdWRpZW5jZSJ9.mSunGUyfyiy0NElvHv09raoSwU84RLHsGvPXH3wgxbtFMKh_3YmENiUC2O3zHN79uqYNpdvZXMWRlAo8ukoQk-h4YiVZeW1vKKZRTQFiI3-HPRZAe5TOuw9FvUQ2khQof5CiiitM8dBb7JsD65gxxMLsq7dHM9dQ2Ub35JWSjYR0Jd-EVjoBgfAIh31FW5nX-10CyHy1r7eAAN8JIP3lj2H7UM5q056udaiCd0qdKGQObMw-6G9bxIOp4zIg-Xnt5m_Zfx09IrFC_SiiWJ5bdg_-mwV2PoOqyrErcKgZYfXkEZV4ZO3YRFkhTPUlQXP1H2oGq45sCZLFpbcx3zol2_f8XZboDqR-yP7_tkY7_MQV3glzFOLgWvUCokXFdLJR278W1JF9yA0bW_WbMV_zXGgX0xL3B9MiWio0CVIOvDXFxDgriPmCA62KDugaBDDG55WrCJIYIKrvKhqsz1U3y93gj2XHGzOZShw1q3YU906RrFWef-kjzPl_ry6vywx5jh5jBxMOTd7YiCbNlPewvcEGQ_881v9usrXIjYHNvlNZcBGWEdHKqwjTZP6qQjQV4jQbfIAom0AdpU8QGrwVyZBtRcNuloJlgo-GFUOSBl0rTL7qObpRSpvoQKn6oZ4QrasXVaRnpyu4a4WpBnYytY1YFwv9Cza-BJkr3wWNf30";
+            var expected = "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJzb21lLWNsYWltLWludCI6MTIzNDU2LCJzb21lLWNsYWltLWJvb2wiOmZhbHNlLCJleHAiOjI1MzQwMjMwMDgwMCwiaXNzIjoic29tZS1pc3N1ZXIiLCJhdWQiOiJzb21lLWF1ZGllbmNlIn0.R9uIuWawfd8hXULqoFpRoFAX2qHmjp7HQFQxllewu7Be9Z8G8WHr8qz-XfmC2GRh-ZP-MzkAkdYzuk_oGrI19WeYim91bHkgIxmEz30WSc_0nlFPoygYKRcBzFs6BI-HPpiOKhiScIN_QEiw0L83r7hV18HA_rwvF7ph1rSilIwhmloBxfTgRrq3yn2h2nshJ05poQrq64_0BBT2yJzcLbbhvuvdMUvEPJ7TiujJq1nyT-yq0072BiSUKwrf7zRZ_xsFhQCZjK8dYfhLlk0PdRB8S2BKIJfcIJhOauKDIRnH7uSbsmLhGMk2H-xSAG7y67iUdWJuJiQVQyefXp9jOVzExUcXmrfs30mYy07VaK1pCcvExoBy7RvmRtXzKWlZfWMrDqeginbJtRzXjtaLp-2CWt0JFE2rUtILLNOSOvMfwv_W53xi72kpchiP_7RKqM7WejSAjYf_jCL3g3mIYl0cDBxSXgdFAmAdZIT7XA6Qf91beBZQw0wBswR6oAHb0Z0C3A8FzdHoQvb07y1EiTqJ7bp8qiw155C34X3HDL1eEjHxP50xe4NPXYBSHf0lOFZ0W_TrcIqwVcJGgkoERgPttLdQH_FHdIlHRs3flcZ3uLuRuU8tmV8wrGrM-xf5mA9ic_668o1619SoWolqATD1gzfXEQcfpvntznIe1-0";
             jwt.Should().Equals(expected);
         }
         
@@ -129,11 +130,10 @@ namespace EasyJWT.Tests
             var privateRSAKeyPath = "";
 
             // WHEN writing the JWT
-            Action act = () => sut.WriteAsymmetric(issuer, audience, DateTime.UtcNow.AddHours(2), privateRSAKeyPath, null);
+            Action act = () => sut.WriteAsymmetric(issuer, audience, DateTime.MaxValue, privateRSAKeyPath, null);
 
             // THEN it should throw ArgumentNullException
-            act.Should().Throw<ArgumentNullException>()
-                .And.Message.Should().Contain(nameof(privateRSAKeyPath));
+            act.Should().Throw<ArgumentNullException>();
         }
         
         [Fact]
@@ -146,7 +146,7 @@ namespace EasyJWT.Tests
             var privateRSAKeyPath = "asdasd";
 
             // WHEN writing the JWT
-            Action act = () => sut.WriteAsymmetric(issuer, audience, DateTime.UtcNow.AddHours(2), privateRSAKeyPath, null);
+            Action act = () => sut.WriteAsymmetric(issuer, audience, DateTime.MaxValue, privateRSAKeyPath, null);
 
             // THEN it should throw IOException
             act.Should().Throw<IOException>()
@@ -163,7 +163,7 @@ namespace EasyJWT.Tests
             var privateRSAKeyPath = "keys/jwtRS512.key";
 
             // WHEN writing the JWT
-            Action act = () => sut.WriteAsymmetric(issuer, audience, DateTime.UtcNow.AddHours(2), privateRSAKeyPath, null);
+            Action act = () => sut.WriteAsymmetric(issuer, audience, DateTime.MaxValue, privateRSAKeyPath, null);
 
             // THEN it should throw ArgumentNullException
             act.Should().Throw<ArgumentNullException>()
@@ -180,7 +180,7 @@ namespace EasyJWT.Tests
             var privateRSAKeyPath = "keys/jwtRS512.key";
 
             // WHEN writing the JWT
-            Action act = () => sut.WriteAsymmetric(issuer, audience, DateTime.UtcNow.AddHours(2), privateRSAKeyPath, null);
+            Action act = () => sut.WriteAsymmetric(issuer, audience, DateTime.MaxValue, privateRSAKeyPath, null);
 
             // THEN it should throw ArgumentNullException
             act.Should().Throw<ArgumentNullException>()

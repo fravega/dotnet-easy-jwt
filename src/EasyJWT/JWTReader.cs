@@ -1,72 +1,85 @@
 using EasyJWT.Helpers;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.IO;
 using System.Linq;
 using System.Security.Claims;
 
 namespace EasyJWT
 {
-    public class JWTReader : IJWTReader
+    public class JWTReader : JWT, IJWTReader
     {
+        public JWTReader() => IdentityModelEventSource.ShowPII = true;
         public IDictionary<string, object> Read(string token)
             => ParseClaimsToDictionary(new JwtSecurityTokenHandler().ReadJwtToken(token).Claims);
 
-        public IDictionary<string, object> ReadAndValidate(string token, string issuer, string sharedKey, string publicRSAKeyPath)
+        public IDictionary<string, object> ReadAndValidate(string token, string issuer, string sharedKey, string publicRSAKeyPath) 
+            => ReadAndValidate(token, ValidationParameters.Default(issuer), sharedKey, publicRSAKeyPath);
+
+        public IDictionary<string, object> ReadAndValidate(string token, ValidationParameters validationParameters, string sharedKey, string publicRSAKeyPath)
         {
             var algorithm = new JwtSecurityTokenHandler().ReadJwtToken(token).SignatureAlgorithm;
             switch (algorithm)
             {
                 case SecurityAlgorithms.HmacSha256:
-                    return ReadAndValidateSymmetric(token, issuer, sharedKey);
+                    return ReadAndValidateSymmetric(token, validationParameters, sharedKey);
                 case SecurityAlgorithms.RsaSha512:
-                    return ReadAndValidateAsymmetric(token, issuer, publicRSAKeyPath);
+                    return ReadAndValidateAsymmetric(token, validationParameters, publicRSAKeyPath);
                 default:
                     throw new ArgumentException($"Unknown signing algorithm {algorithm}");
             }
         }
 
         public IDictionary<string, object> ReadAndValidateAsymmetric(string token, string issuer, string publicRSAKeyPath)
-            => ReadAndValidateJWT(token, issuer, BuildAndValidateAsymmetricPublicKey(publicRSAKeyPath));
+            => ReadAndValidateJWT(token, ValidationParameters.Default(issuer), BuildAndValidateAsymmetricPublicKey(publicRSAKeyPath));
+
+        public IDictionary<string, object> ReadAndValidateAsymmetric(string token, ValidationParameters validationParameters, string publicRSAKeyPath)
+            => ReadAndValidateJWT(token, validationParameters, BuildAndValidateAsymmetricPublicKey(publicRSAKeyPath));
 
         public IDictionary<string, object> ReadAndValidateSymmetric(string token, string issuer, string sharedKey)
-            => ReadAndValidateJWT(token, issuer, BuildAndValidateSymmetricKey(sharedKey));
+            => ReadAndValidateJWT(token, ValidationParameters.Default(issuer), BuildAndValidateSymmetricKey(sharedKey));
 
-        private IDictionary<string, object> ReadAndValidateJWT(string token, string issuer, SecurityKey securityKey)
+        public IDictionary<string, object> ReadAndValidateSymmetric(string token, ValidationParameters validationParameters, string sharedKey)
+            => ReadAndValidateJWT(token, validationParameters, BuildAndValidateSymmetricKey(sharedKey));
+
+        private IDictionary<string, object> ReadAndValidateJWT(string token, ValidationParameters validationParameters, SecurityKey securityKey)
         {
-            var claimsPrincipal = new JwtSecurityTokenHandler().ValidateToken(token, TokenValidationHelper.CreateParameters(issuer, securityKey), out SecurityToken validatedToken);
+            var claimsPrincipal = new JwtSecurityTokenHandler().ValidateToken(token, validationParameters.CreateParameters(securityKey), out SecurityToken validatedToken);
             return ParseClaimsToDictionary(claimsPrincipal.Claims);
-        }
-
-        private RsaSecurityKey BuildAndValidateAsymmetricPublicKey(string publicRSAKeyPath)
-        {
-            if (string.IsNullOrEmpty(publicRSAKeyPath))
-                throw new ArgumentNullException(nameof(publicRSAKeyPath));
-
-            if (!File.Exists(publicRSAKeyPath))
-                throw new IOException($"File not found {publicRSAKeyPath}");
-
-            return new RsaSecurityKey(RSAHelper.PublicKeyFromPemFile(publicRSAKeyPath));
-        }
-
-        private SymmetricSecurityKey BuildAndValidateSymmetricKey(string sharedKey)
-        {
-            if (string.IsNullOrEmpty(sharedKey))
-                throw new ArgumentNullException(nameof(sharedKey));
-
-            var symmetricSecurityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(sharedKey));
-
-            if (symmetricSecurityKey.KeySize < 128)
-                throw new ArgumentOutOfRangeException(nameof(sharedKey), message: $"Symmetric shared key must be greater than 128 bits. Given key has {symmetricSecurityKey.KeySize} bits.");
-
-            return symmetricSecurityKey;
         }
 
         private IDictionary<string, object> ParseClaimsToDictionary(IEnumerable<Claim> claims)
             => claims
                 .GroupBy(x => x.Type)
-                .ToDictionary(x => x.Key, x => x.Count() <= 1 ? x.FirstOrDefault()?.Value : (object)x.Select(v => v.Value).ToList());
+                .ToDictionary(x => x.Key, x => x.Count() <= 1 ? ParseClaim(x.FirstOrDefault()) : (object)x.Select(v => ParseClaim(v)).ToArray());
+        
+        private object ParseClaim(Claim claim)
+        {
+            if (claim == null)
+                return null;
+
+            switch (claim.ValueType)
+            {
+                case ClaimValueTypes.Boolean:
+                    if (bool.TryParse(claim.Value, out bool boolVal)) return boolVal;
+                    break;
+                case ClaimValueTypes.Integer:
+                case ClaimValueTypes.Integer32:
+                    if (int.TryParse(claim.Value, out int intVal)) return intVal;
+                    break;
+                case ClaimValueTypes.Integer64:
+                    if (Int64.TryParse(claim.Value, out long longVal)) return longVal;
+                    break;
+                case ClaimValueTypes.Double:
+                    if (decimal.TryParse(claim.Value, out decimal decimalVal)) return decimalVal;
+                    break;
+                case ClaimValueTypes.DateTime:
+                    if (DateTime.TryParse(claim.Value, out DateTime dt)) return dt;
+                    break;
+            }
+            return claim.Value;
+        }
     }
 }

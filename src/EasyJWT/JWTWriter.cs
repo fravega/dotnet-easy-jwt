@@ -1,40 +1,23 @@
-using EasyJWT.Helpers;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.IO;
 using System.Security.Claims;
-using System.Security.Cryptography;
 
 namespace EasyJWT
 {
-    public class JWTWriter : IJWTWriter
+    public class JWTWriter : JWT, IJWTWriter
     {
         public string WriteAsymmetric(string issuer, string audience, DateTime expiresOn, string privateRSAKeyPath, Dictionary<string, object> claims)
         {
-            if (string.IsNullOrEmpty(privateRSAKeyPath))
-                throw new ArgumentNullException(nameof(privateRSAKeyPath));
-                
-            if (!File.Exists(privateRSAKeyPath))
-                throw new IOException($"File not found {privateRSAKeyPath}");
-
-            RSA privateRsa = RSAHelper.PrivateKeyFromPemFile(privateRSAKeyPath);
-
-            return WriteJWT(issuer, audience, expiresOn, new SigningCredentials(new RsaSecurityKey(privateRsa), SecurityAlgorithms.RsaSha512), claims);
+            var rsaSecurityKey = BuildAndValidateAsymmetricPrivateKey(privateRSAKeyPath);
+            return WriteJWT(issuer, audience, expiresOn, new SigningCredentials(rsaSecurityKey, SecurityAlgorithms.RsaSha512), claims);
         }
 
         public string WriteSymmetric(string issuer, string audience, DateTime expiresOn, string sharedKey, Dictionary<string, object> claims)
         {
-            if (string.IsNullOrEmpty(sharedKey))
-                throw new ArgumentNullException(nameof(sharedKey));
-
-            var symmetricSecurityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(sharedKey));
-
-            if (symmetricSecurityKey.KeySize < 128)
-                throw new ArgumentOutOfRangeException(nameof(sharedKey), message: $"Symmetric shared key must be greater than 128 bits. Given key has {symmetricSecurityKey.KeySize} bits.");
-
+            var symmetricSecurityKey = BuildAndValidateSymmetricKey(sharedKey);
             return WriteJWT(issuer, audience, expiresOn, new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256), claims);
         }
 
@@ -49,7 +32,7 @@ namespace EasyJWT
             var token = new JwtSecurityToken(
                 issuer: issuer,
                 audience: audience,
-                claims: GetClaimListFromDictionary(claims),
+                claims: claims != null ? GetClaimListFromDictionary(claims) : null,
                 expires: expiresOn,
                 signingCredentials: signingCredentials
             );
@@ -75,7 +58,11 @@ namespace EasyJWT
             if (value is bool)
                 type = ClaimValueTypes.Boolean;
             else if (value is int)
-                type = ClaimValueTypes.Integer;
+                type = ClaimValueTypes.Integer32;
+            else if (value is long)
+                type = ClaimValueTypes.Integer64;
+            else if (value is decimal)
+                type = ClaimValueTypes.Double;
             else if (value is DateTime)
                 type = ClaimValueTypes.DateTime;
 
