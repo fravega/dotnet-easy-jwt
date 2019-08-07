@@ -7,7 +7,7 @@ namespace EasyJWT
 {
     public abstract class JWT
     {
-        protected SymmetricSecurityKey BuildAndValidateSymmetricKey(string sharedKey)
+        protected SymmetricSecurityKey BuildSymmetricKey(string sharedKey)
         {
             if (string.IsNullOrEmpty(sharedKey))
                 throw new ArgumentNullException(nameof(sharedKey));
@@ -20,13 +20,13 @@ namespace EasyJWT
             return symmetricSecurityKey;
         }
 
-        protected RsaSecurityKey BuildAndValidateAsymmetricPublicKey(string publicRSAKeyPath)
+        protected RsaSecurityKey BuildRSAPublicKey(string publicRSAKeyPath)
         {
             ValidateRSAKeyFile(publicRSAKeyPath);
             return new RsaSecurityKey(RSAHelper.PublicKeyFromPemFile(publicRSAKeyPath));
         }
 
-        protected RsaSecurityKey BuildAndValidateAsymmetricPrivateKey(string privateRSAKeyPath)
+        protected RsaSecurityKey BuildRSAPrivateKey(string privateRSAKeyPath)
         {
             ValidateRSAKeyFile(privateRSAKeyPath);
             return new RsaSecurityKey(RSAHelper.PrivateKeyFromPemFile(privateRSAKeyPath));

@@ -33,16 +33,16 @@ namespace EasyJWT
         }
 
         public IDictionary<string, object> ReadAndValidateAsymmetric(string token, string issuer, string publicRSAKeyPath)
-            => ReadAndValidateJWT(token, ValidationParameters.Default(issuer), BuildAndValidateAsymmetricPublicKey(publicRSAKeyPath));
+            => ReadAndValidateAsymmetric(token, ValidationParameters.Default(issuer), publicRSAKeyPath);
 
         public IDictionary<string, object> ReadAndValidateAsymmetric(string token, ValidationParameters validationParameters, string publicRSAKeyPath)
-            => ReadAndValidateJWT(token, validationParameters, BuildAndValidateAsymmetricPublicKey(publicRSAKeyPath));
+            => ReadAndValidateJWT(token, validationParameters, BuildRSAPublicKey(publicRSAKeyPath));
 
         public IDictionary<string, object> ReadAndValidateSymmetric(string token, string issuer, string sharedKey)
-            => ReadAndValidateJWT(token, ValidationParameters.Default(issuer), BuildAndValidateSymmetricKey(sharedKey));
+            => ReadAndValidateSymmetric(token, ValidationParameters.Default(issuer), sharedKey);
 
         public IDictionary<string, object> ReadAndValidateSymmetric(string token, ValidationParameters validationParameters, string sharedKey)
-            => ReadAndValidateJWT(token, validationParameters, BuildAndValidateSymmetricKey(sharedKey));
+            => ReadAndValidateJWT(token, validationParameters, BuildSymmetricKey(sharedKey));
 
         private IDictionary<string, object> ReadAndValidateJWT(string token, ValidationParameters validationParameters, SecurityKey securityKey)
         {

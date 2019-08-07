@@ -11,13 +11,13 @@ namespace EasyJWT
     {
         public string WriteAsymmetric(string issuer, string audience, DateTime expiresOn, string privateRSAKeyPath, Dictionary<string, object> claims)
         {
-            var rsaSecurityKey = BuildAndValidateAsymmetricPrivateKey(privateRSAKeyPath);
+            var rsaSecurityKey = BuildRSAPrivateKey(privateRSAKeyPath);
             return WriteJWT(issuer, audience, expiresOn, new SigningCredentials(rsaSecurityKey, SecurityAlgorithms.RsaSha512), claims);
         }
 
         public string WriteSymmetric(string issuer, string audience, DateTime expiresOn, string sharedKey, Dictionary<string, object> claims)
         {
-            var symmetricSecurityKey = BuildAndValidateSymmetricKey(sharedKey);
+            var symmetricSecurityKey = BuildSymmetricKey(sharedKey);
             return WriteJWT(issuer, audience, expiresOn, new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256), claims);
         }
 
