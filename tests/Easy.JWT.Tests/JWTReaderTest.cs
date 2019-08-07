@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using Xunit;
 
-namespace EasyJWT.Tests
+namespace Easy.JWT.Tests
 {
     public class JWTReaderTest
     {

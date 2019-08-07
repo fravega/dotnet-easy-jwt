@@ -1,4 +1,4 @@
-using EasyJWT.Helpers;
+using Easy.JWT.Helpers;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -7,7 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 
-namespace EasyJWT
+namespace Easy.JWT
 {
     public class JWTReader : JWT, IJWTReader
     {

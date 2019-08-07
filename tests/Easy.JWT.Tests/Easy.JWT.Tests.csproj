@@ -4,8 +4,8 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
 
     <IsPackable>false</IsPackable>
-    <AssemblyName>EasyJWT.Tests</AssemblyName>
-    <RootNamespace>EasyJWT.Tests</RootNamespace>
+    <AssemblyName>Easy.JWT.Tests</AssemblyName>
+    <RootNamespace>Easy.JWT.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\EasyJWT\EasyJWT.csproj" />
+    <ProjectReference Include="..\..\src\Easy.JWT\Easy.JWT.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,9 +1,9 @@
-using EasyJWT.Helpers;
+using Easy.JWT.Helpers;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IO;
 
-namespace EasyJWT
+namespace Easy.JWT
 {
     public abstract class JWT
     {

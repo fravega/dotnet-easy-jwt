@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace EasyJWT
+namespace Easy.JWT
 {
     /// <summary>
     /// Contains methods tu build JWT tokens using different signing algorithms.

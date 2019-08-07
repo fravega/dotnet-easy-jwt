@@ -1,7 +1,6 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace EasyJWT
+namespace Easy.JWT
 {
     /// <summary>
     /// Contains methods to read and validate JWT tokens using different types of signing keys.

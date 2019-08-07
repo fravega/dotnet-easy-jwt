@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>EasyJWT</AssemblyName>
-    <RootNamespace>EasyJWT</RootNamespace>
+    <AssemblyName>Easy.JWT</AssemblyName>
+    <RootNamespace>Easy.JWT</RootNamespace>
     <IncludeSource>True</IncludeSource>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>
@@ -14,6 +14,7 @@
     <Version>1.0.0</Version>
     <RepositoryUrl>https://github.com/fravega/dotnet-easy-jwt</RepositoryUrl>
     <PackageTags>net-standard, jwt, auth</PackageTags>
+    <Copyright>MIT License</Copyright>
     <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
 

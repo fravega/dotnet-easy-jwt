@@ -1,6 +1,6 @@
 using Microsoft.IdentityModel.Tokens;
 
-namespace EasyJWT.Helpers
+namespace Easy.JWT.Helpers
 {
     public static class TokenValidationHelper
     {

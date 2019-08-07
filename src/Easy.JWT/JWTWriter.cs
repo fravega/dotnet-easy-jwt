@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace EasyJWT
+namespace Easy.JWT
 {
     public class JWTWriter : JWT, IJWTWriter
     {

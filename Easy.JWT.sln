@@ -5,11 +5,11 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{31131261-43B8-446C-A565-FC3924631C3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyJWT", "src\EasyJWT\EasyJWT.csproj", "{CD6398D6-1F93-4847-86D2-FFD5152B7AE7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easy.JWT", "src\Easy.JWT\Easy.JWT.csproj", "{CD6398D6-1F93-4847-86D2-FFD5152B7AE7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{DC8693D3-CD74-432F-BA3C-854F69F30517}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyJWT.Tests", "tests\EasyJWT.Tests\EasyJWT.Tests.csproj", "{71E4E4E6-16DE-46E4-8CBA-E719C15FFC34}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Easy.JWT.Tests", "tests\Easy.JWT.Tests\Easy.JWT.Tests.csproj", "{71E4E4E6-16DE-46E4-8CBA-E719C15FFC34}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

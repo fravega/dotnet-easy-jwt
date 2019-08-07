@@ -5,7 +5,7 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 
-namespace EasyJWT.Helpers
+namespace Easy.JWT.Helpers
 {
     public static class RSAHelper
     {

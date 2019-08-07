@@ -4,7 +4,7 @@ using System.IO;
 using FluentAssertions;
 using Xunit;
 
-namespace EasyJWT.Tests
+namespace Easy.JWT.Tests
 {
     public class JWTWriterTest
     {

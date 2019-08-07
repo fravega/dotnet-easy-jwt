@@ -1,4 +1,4 @@
-namespace EasyJWT
+namespace Easy.JWT
 {
 	/// <summary>
 	/// Contains a set of parameters that will be used to build the Microsoft.IdentityModel.Tokens.TokenValidationParameters
